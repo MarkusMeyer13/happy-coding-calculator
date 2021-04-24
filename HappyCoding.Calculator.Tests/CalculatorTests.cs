@@ -94,5 +94,40 @@ namespace HappyCoding.Calculator.Tests
             var result = advancedCalculator.Calculate("2/0");
         }
 
+        [TestMethod]
+        public void MultipleAndAddParenthesisTest()
+        {
+            AdvancedCalculator advancedCalculator = new();
+            var result = advancedCalculator.Calculate("(9+3)*2");
+            Assert.AreEqual(24d, result);
+        }
+
+        [TestMethod]
+        public void MultipleAndAddNestedParenthesisTest()
+        {
+            AdvancedCalculator advancedCalculator = new();
+            var result = advancedCalculator.Calculate("5*((9+3)*2)+4");
+            Assert.AreEqual(124d, result);
+        }
+
+        [TestMethod]
+        public void DivideAndMultipleTest()
+        {
+            AdvancedCalculator advancedCalculator = new();
+            var result = advancedCalculator.Calculate("3/3*5");
+            Assert.AreEqual(5d, result);
+        }
+
+
+
+        [TestMethod]
+        public void ChallengeTest()
+        {
+            AdvancedCalculator advancedCalculator = new();
+            var result = advancedCalculator.Calculate("(1+2)/3*5");
+            Assert.AreEqual(5d, result);
+        }
+
+
     }
 }

@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace HappyCoding.Calculator
 {
     public class AdvancedCalculator
     {
-        private List<string> _calculateOperatotors;
+        private List<string> _calculateOperators;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdvancedCalculator"/> class.
+        /// </summary>
         public AdvancedCalculator()
         {
-            _calculateOperatotors = new List<string>
+            _calculateOperators = new List<string>
             {
                 "+",
                 "-",
@@ -21,58 +23,78 @@ namespace HappyCoding.Calculator
             };
         }
 
+        /// <summary>
+        /// Calculates the specified expression.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>Result.</returns>
         public double Calculate(string expression)
         {
-            var result = CalculateBasicOperations(expression);
+            var result = CalculateParenthesis(expression);
+
+            result = CalculateBasicOperations(result);
             return double.Parse(result);
         }
 
+        /// <summary>
+        /// Calculates the basic operations.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <remarks>
+        /// <list type="number">
+        /// <item>
+        /// PEMDAS.
+        /// </item>
+        /// <item>
+        /// Calculate expresssion left to right.
+        /// </item>
+        /// </list>
+        /// </remarks>
+        /// <returns>string with one calculated expression.</returns>
         private string CalculateBasicOperations(string expression)
         {
-            string result = string.Empty;
-            if (expression.IndexOf("*") < expression.IndexOf("/"))
+            //string result = expression;
+            if (expression.Contains("/") && expression.Contains("*")  && expression.IndexOf("*") < expression.IndexOf("/"))
             {
-                result = CalculateBasicOperation(expression, "*");
-                result = CalculateBasicOperation(result, "/");
+                expression = CalculateBasicOperation(expression, "*");
+                //result = CalculateBasicOperation(expression, "/");
             }
-            else
+            else if (expression.Contains("/")  && expression.Contains("*") && expression.IndexOf("/") < expression.IndexOf("*"))
             {
-                result = CalculateBasicOperation(result, "/");
-                result = CalculateBasicOperation(expression, "*");
+                expression = CalculateBasicOperation(expression, "/");
+                //result = CalculateBasicOperation(expression, "*");
             }
-            if (expression.IndexOf("+") < expression.IndexOf("-"))
+            else if(expression.Contains("/"))
             {
-                result = CalculateBasicOperation(result, "+");
-                result = CalculateBasicOperation(result, "-");
+                expression = CalculateBasicOperation(expression, "/");
             }
-            else
+            else if (expression.Contains("*"))
             {
-                result = CalculateBasicOperation(result, "-");
-                result = CalculateBasicOperation(result, "+");
+                expression = CalculateBasicOperation(expression, "*");
             }
 
-            return result;
-        }
-
-        private string Multiple(string expression)
-        {
-            var pattern = "([0-9,]*[*][0-9,]+)";
-            var regex = new Regex(pattern);
-            var enumerator = regex.Matches(expression).GetEnumerator();
-            while (enumerator.MoveNext())
+            if (expression.Contains("-") && expression.Contains("+")  && expression.IndexOf("+") < expression.IndexOf("-"))
             {
-                string match = enumerator.Current.ToString();
-                string[] elements = match.Split('*');
-                double currentValue = 1d;
-                for (int i = 0; i < elements.Length; i++)
-                {
-                    double val = double.Parse(elements[i]);
-                    currentValue = currentValue * val;
-                }
-                expression = expression.Replace(match, currentValue.ToString());
+                expression = CalculateBasicOperation(expression, "+");
+                //result = CalculateBasicOperation(expression, "-");
             }
-
+            else if (expression.Contains("-") && expression.Contains("+") && expression.IndexOf("-") < expression.IndexOf("+"))
+            {
+                expression = CalculateBasicOperation(expression, "-");
+                //result = CalculateBasicOperation(expression, "+");
+            }
+            else if (expression.Contains("-"))
+            {
+                expression = CalculateBasicOperation(expression, "-");
+                //result = CalculateBasicOperation(expression, "+");
+            }
+            else if (expression.Contains("+"))
+            {
+                expression = CalculateBasicOperation(expression, "+");
+                //result = CalculateBasicOperation(expression, "-");
+            }
             return expression;
+
         }
 
         private string CalculateBasicOperation(string expression, string expressionOperator)
@@ -100,7 +122,7 @@ namespace HappyCoding.Calculator
                         }
                         else
                         {
-                            currentValue = currentValue * val;
+                            currentValue *= val;
                         }
                     }
                     else if (expressionOperator.Equals("/", StringComparison.OrdinalIgnoreCase))
@@ -115,7 +137,7 @@ namespace HappyCoding.Calculator
                             {
                                 throw new DivideByZeroException();
                             }
-                            currentValue = currentValue / val;
+                            currentValue /= val;
                         }
                     }
                     else if (expressionOperator.Equals("+", StringComparison.OrdinalIgnoreCase))
@@ -126,7 +148,7 @@ namespace HappyCoding.Calculator
                         }
                         else
                         {
-                            currentValue = currentValue + val;
+                            currentValue += val;
                         }
                     }
                     else if (expressionOperator.Equals("-", StringComparison.OrdinalIgnoreCase))
@@ -137,17 +159,38 @@ namespace HappyCoding.Calculator
                         }
                         else
                         {
-                            currentValue = currentValue - val;
+                            currentValue -= val;
                         }
                     }
                 }
                 expression = expression.Replace(match, currentValue.ToString());
-                if (_calculateOperatotors.Any<string>(o => match.Contains(o)) && !_calculateOperatotors.Any<string>(o => expression.StartsWith(o)))
+                if (_calculateOperators.Any<string>(o => match.Contains(o)) && !_calculateOperators.Any<string>(o => expression.StartsWith(o)))
                 {
                     expression = CalculateBasicOperations(expression);
                 }
             }
 
+            return expression;
+        }
+
+        public string CalculateParenthesis(string expression)
+        {
+            var pattern = $"[(][0-9+-/*]*[)]";
+            var regex = new Regex(pattern);
+            var enumerator = regex.Matches(expression).GetEnumerator();
+            double currentValue = double.NaN;
+            while (enumerator.MoveNext())
+            {
+                var currentExpression = enumerator.Current.ToString();
+                var cleanedCurrentExpression = currentExpression.Replace("(", "").Replace(")", "");
+                var temp = CalculateBasicOperations(cleanedCurrentExpression);
+                expression = expression.Replace(currentExpression, temp.ToString());
+
+            }
+            if (expression.Contains("("))
+            {
+                expression = CalculateParenthesis(expression);
+            }
             return expression;
         }
 
