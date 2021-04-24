@@ -30,7 +30,7 @@ namespace HappyCoding.Calculator
         private string CalculateBasicOperations(string expression)
         {
             string result = string.Empty;
-            if(expression.IndexOf("*") < expression.IndexOf("/"))
+            if (expression.IndexOf("*") < expression.IndexOf("/"))
             {
                 result = CalculateBasicOperation(expression, "*");
                 result = CalculateBasicOperation(result, "/");
@@ -111,6 +111,10 @@ namespace HappyCoding.Calculator
                         }
                         else
                         {
+                            if (val.Equals(0d))
+                            {
+                                throw new DivideByZeroException();
+                            }
                             currentValue = currentValue / val;
                         }
                     }
@@ -137,16 +141,10 @@ namespace HappyCoding.Calculator
                         }
                     }
                 }
-                //if (match.ToString().StartsWith(expressionOperator))
-                //if (match.ToString().StartsWith("+") || match.ToString().StartsWith("-") || match.ToString().StartsWith("/") || match.ToString().StartsWith("*"))
-                if (_calculateOperatotors.Any<string>(o => match.StartsWith(o)))
+                expression = expression.Replace(match, currentValue.ToString());
+                if (_calculateOperatotors.Any<string>(o => match.Contains(o)) && !_calculateOperatotors.Any<string>(o => expression.StartsWith(o)))
                 {
-                    expression = CalculateBasicOperations(currentValue.ToString());
-                    //expression = CalculateBasicOperation(currentValue.ToString(), match.Substring(0, 1));
-                }
-                else
-                {
-                    expression = expression.Replace(match, currentValue.ToString());
+                    expression = CalculateBasicOperations(expression);
                 }
             }
 

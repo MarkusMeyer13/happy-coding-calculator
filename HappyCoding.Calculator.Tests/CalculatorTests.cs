@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace HappyCoding.Calculator.Tests
 {
@@ -77,6 +78,21 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(8d, result);
         }
 
+        [TestMethod]
+        public void AddAndMultipleTest()
+        {
+            AdvancedCalculator advancedCalculator = new();
+            var result = advancedCalculator.Calculate("9+3*2");
+            Assert.AreEqual(15d, result);
+        }
+
+        [ExpectedException(typeof(DivideByZeroException))]
+        [TestMethod]
+        public void DivideByZeroTest()
+        {
+            AdvancedCalculator advancedCalculator = new();
+            var result = advancedCalculator.Calculate("2/0");
+        }
 
     }
 }
