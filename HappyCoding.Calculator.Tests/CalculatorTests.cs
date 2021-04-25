@@ -1,11 +1,21 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+// Copyright (c) Markus Meyer. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
 using System;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HappyCoding.Calculator.Tests
 {
+    /// <summary>
+    /// CalculatorTests.
+    /// </summary>
     [TestClass]
     public class CalculatorTests
     {
+        /// <summary>
+        /// Simples the add test.
+        /// </summary>
         [TestMethod]
         public void SimpleAddTest()
         {
@@ -14,6 +24,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(5d, result);
         }
 
+        /// <summary>
+        /// Simples the subtract test.
+        /// </summary>
         [TestMethod]
         public void SimpleSubtractTest()
         {
@@ -22,6 +35,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(-3d, result);
         }
 
+        /// <summary>
+        /// Simples the multiple test.
+        /// </summary>
         [TestMethod]
         public void SimpleMultipleTest()
         {
@@ -30,6 +46,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(8d, result);
         }
 
+        /// <summary>
+        /// Simples the divide test.
+        /// </summary>
         [TestMethod]
         public void SimpleDivideTest()
         {
@@ -38,6 +57,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(0.5d, result);
         }
 
+        /// <summary>
+        /// Adds the test.
+        /// </summary>
         [TestMethod]
         public void AddTest()
         {
@@ -46,6 +68,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(14d, result);
         }
 
+        /// <summary>
+        /// Subtracts the test.
+        /// </summary>
         [TestMethod]
         public void SubtractTest()
         {
@@ -54,6 +79,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(4d, result);
         }
 
+        /// <summary>
+        /// Multiples the test.
+        /// </summary>
         [TestMethod]
         public void MultipleTest()
         {
@@ -62,6 +90,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(40d, result);
         }
 
+        /// <summary>
+        /// Multiples the negative test.
+        /// </summary>
         [TestMethod]
         public void MultipleNegativeTest()
         {
@@ -70,6 +101,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(-40d, result);
         }
 
+        /// <summary>
+        /// Divides the test.
+        /// </summary>
         [TestMethod]
         public void DivideTest()
         {
@@ -78,6 +112,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(0.25d, result);
         }
 
+        /// <summary>
+        /// Subtracts the and add test.
+        /// </summary>
         [TestMethod]
         public void SubtractAndAddTest()
         {
@@ -86,6 +123,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(8d, result);
         }
 
+        /// <summary>
+        /// Adds the and multiple test.
+        /// </summary>
         [TestMethod]
         public void AddAndMultipleTest()
         {
@@ -94,6 +134,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(15d, result);
         }
 
+        /// <summary>
+        /// Adds the and multiple and add test.
+        /// </summary>
         [TestMethod]
         public void AddAndMultipleAndAddTest()
         {
@@ -102,7 +145,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(19d, result);
         }
 
-
+        /// <summary>
+        /// Divides the by zero test.
+        /// </summary>
         [ExpectedException(typeof(DivideByZeroException))]
         [TestMethod]
         public void DivideByZeroTest()
@@ -111,6 +156,9 @@ namespace HappyCoding.Calculator.Tests
             var result = advancedCalculator.Calculate("2/0");
         }
 
+        /// <summary>
+        /// Multiples the and add parenthesis test.
+        /// </summary>
         [TestMethod]
         public void MultipleAndAddParenthesisTest()
         {
@@ -119,6 +167,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(24d, result);
         }
 
+        /// <summary>
+        /// Multiples the and add nested parenthesis test.
+        /// </summary>
         [TestMethod]
         public void MultipleAndAddNestedParenthesisTest()
         {
@@ -127,6 +178,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(124d, result);
         }
 
+        /// <summary>
+        /// Divides the and multiple test.
+        /// </summary>
         [TestMethod]
         public void DivideAndMultipleTest()
         {
@@ -135,8 +189,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(5d, result);
         }
 
-
-
+        /// <summary>
+        /// Challenges the test.
+        /// </summary>
         [TestMethod]
         public void ChallengeTest()
         {
@@ -145,6 +200,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(5d, result);
         }
 
+        /// <summary>
+        /// Validations the test.
+        /// </summary>
         [TestMethod]
         public void ValidationTest()
         {
@@ -153,6 +211,9 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(double.NaN, result);
         }
 
+        /// <summary>
+        /// Validations the method test.
+        /// </summary>
         [TestMethod]
         public void ValidationMethodTest()
         {
@@ -160,6 +221,5 @@ namespace HappyCoding.Calculator.Tests
             var result = advancedCalculator.IsValidExpression("(1+2)/3*5+(");
             Assert.AreEqual(false, result);
         }
-
     }
 }

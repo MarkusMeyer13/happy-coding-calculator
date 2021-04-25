@@ -1,7 +1,7 @@
 ﻿
 namespace HappyCoding.Calculator.Win
 {
-    partial class Form1
+    partial class FrmCalculator
     {
         /// <summary>
         ///  Required designer variable.
@@ -303,14 +303,14 @@ namespace HappyCoding.Calculator.Win
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.btn_Click);
             // 
-            // Form1
+            // FrmCalculator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(446, 584);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.Name = "Form1";
+            this.Name = "FrmCalculator";
             this.Text = "MetalMeyer Calculator";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

@@ -1,20 +1,29 @@
-﻿using System;
+﻿// Copyright (c) Markus Meyer. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace HappyCoding.Calculator
 {
+    /// <summary>
+    /// AdvancedCalculator.
+    /// </summary>
     public class AdvancedCalculator
     {
-        private List<string> _calculateOperators;
+        /// <summary>
+        /// The calculate operators.
+        /// </summary>
+        private List<string> calculateOperators;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdvancedCalculator"/> class.
         /// </summary>
         public AdvancedCalculator()
         {
-            _calculateOperators = new List<string>
+            this.calculateOperators = new List<string>
             {
                 "+",
                 "-",
@@ -49,13 +58,14 @@ namespace HappyCoding.Calculator
         /// <returns>Result.</returns>
         public double Calculate(string expression)
         {
-            if (!IsValidExpression(expression))
+            if (!this.IsValidExpression(expression))
             {
                 return double.NaN;
             }
-            var result = CalculateParenthesis(expression);
 
-            result = CalculateBasicOperations(result);
+            var result = this.CalculateParenthesis(expression);
+
+            result = this.CalculateBasicOperations(result);
             return double.Parse(result);
         }
 
@@ -76,46 +86,50 @@ namespace HappyCoding.Calculator
         /// <returns>string with one calculated expression.</returns>
         private string CalculateBasicOperations(string expression)
         {
-            //string result = expression;
             if (expression.Contains("/") && expression.Contains("*") && expression.IndexOf("*") < expression.IndexOf("/"))
             {
-                expression = CalculateBasicOperation(expression, "*");
-                //result = CalculateBasicOperation(expression, "/");
+                expression = this.CalculateBasicOperation(expression, "*");
             }
             else if (expression.Contains("/") && expression.Contains("*") && expression.IndexOf("/") < expression.IndexOf("*"))
             {
-                expression = CalculateBasicOperation(expression, "/");
-                //result = CalculateBasicOperation(expression, "*");
+                expression = this.CalculateBasicOperation(expression, "/");
             }
             else if (expression.Contains("/"))
             {
-                expression = CalculateBasicOperation(expression, "/");
+                expression = this.CalculateBasicOperation(expression, "/");
             }
             else if (expression.Contains("*"))
             {
-                expression = CalculateBasicOperation(expression, "*");
+                expression = this.CalculateBasicOperation(expression, "*");
             }
 
             if (expression.Contains("-") && expression.Contains("+") && expression.IndexOf("+") < expression.IndexOf("-"))
             {
-                expression = CalculateBasicOperation(expression, "+");
+                expression = this.CalculateBasicOperation(expression, "+");
             }
             else if (expression.Contains("-") && expression.Contains("+") && expression.IndexOf("-") < expression.IndexOf("+"))
             {
-                expression = CalculateBasicOperation(expression, "-");
+                expression = this.CalculateBasicOperation(expression, "-");
             }
             else if (expression.Contains("-"))
             {
-                expression = CalculateBasicOperation(expression, "-");
+                expression = this.CalculateBasicOperation(expression, "-");
             }
             else if (expression.Contains("+"))
             {
-                expression = CalculateBasicOperation(expression, "+");
+                expression = this.CalculateBasicOperation(expression, "+");
             }
-            return expression;
 
+            return expression;
         }
 
+        /// <summary>
+        /// Calculates the basic operation.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="expressionOperator">The expression operator.</param>
+        /// <returns>Calcalauted expression.</returns>
+        /// <exception cref="System.DivideByZeroException">DivideByZeroException.</exception>
         private string CalculateBasicOperation(string expression, string expressionOperator)
         {
             var pattern = $"([0-9,]+[{expressionOperator}][0-9,-]+)";
@@ -132,6 +146,7 @@ namespace HappyCoding.Calculator
                     {
                         continue;
                     }
+
                     double val = double.Parse(elements[i]);
                     if (expressionOperator.Equals("*", StringComparison.OrdinalIgnoreCase))
                     {
@@ -156,6 +171,7 @@ namespace HappyCoding.Calculator
                             {
                                 throw new DivideByZeroException();
                             }
+
                             currentValue /= val;
                         }
                     }
@@ -182,10 +198,11 @@ namespace HappyCoding.Calculator
                         }
                     }
                 }
+
                 expression = expression.Replace(match, currentValue.ToString());
-                if (_calculateOperators.Any<string>(o => match.Contains(o)) && !_calculateOperators.Any<string>(o => expression.StartsWith(o)))
+                if (this.calculateOperators.Any<string>(o => match.Contains(o)) && !this.calculateOperators.Any<string>(o => expression.StartsWith(o)))
                 {
-                    expression = CalculateBasicOperations(expression);
+                    expression = this.CalculateBasicOperations(expression);
                 }
             }
 
@@ -196,7 +213,7 @@ namespace HappyCoding.Calculator
         /// Calculates the parenthesis.
         /// </summary>
         /// <param name="expression">The expression.</param>
-        /// <returns></returns>
+        /// <returns>Calculate Parenthesis expression.</returns>
         private string CalculateParenthesis(string expression)
         {
             var pattern = $"[(][0-9+-/*]*[)]";
@@ -205,17 +222,17 @@ namespace HappyCoding.Calculator
             while (enumerator.MoveNext())
             {
                 var currentExpression = enumerator.Current.ToString();
-                var cleanedCurrentExpression = currentExpression.Replace("(", "").Replace(")", "");
-                var temp = CalculateBasicOperations(cleanedCurrentExpression);
+                var cleanedCurrentExpression = currentExpression.Replace("(", string.Empty).Replace(")", string.Empty);
+                var temp = this.CalculateBasicOperations(cleanedCurrentExpression);
                 expression = expression.Replace(currentExpression, temp.ToString());
-
             }
+
             if (expression.Contains("("))
             {
-                expression = CalculateParenthesis(expression);
+                expression = this.CalculateParenthesis(expression);
             }
+
             return expression;
         }
-
     }
 }
