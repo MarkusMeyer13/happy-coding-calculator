@@ -26,6 +26,19 @@ namespace HappyCoding.Calculator.Win
         {
             this.InitializeComponent();
             this.calculator = new AdvancedCalculator();
+
+            this.toolStripMenuItemAbout.Click += this.ToolStripMenuItem1_Click;
+        }
+
+        /// <summary>
+        /// Handles the Click event of the ToolStripMenuItem1 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            FrmAbout frmAbout = new FrmAbout();
+            frmAbout.ShowDialog();
         }
 
         /// <summary>
@@ -33,16 +46,19 @@ namespace HappyCoding.Calculator.Win
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<Pending>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "Internal naming")]
         private void txtInput_TextChanged(object sender, EventArgs e)
         {
             var lastCharacter = this.txtInput.Text.LastOrDefault<char>().ToString();
             var patternInput = @"[0-9/*\-+,()]";
             if (!string.IsNullOrEmpty(lastCharacter) && !Regex.IsMatch(lastCharacter, patternInput))
             {
-                this.txtInput.Text = this.txtInput.Text.Substring(0, this.txtInput.Text.Length - 1);
-                this.txtInput.SelectionStart = this.txtInput.Text.Length;
-                this.txtInput.SelectionLength = 0;
+                if (this.txtInput.Text.Length > 0)
+                {
+                    this.txtInput.Text = this.txtInput.Text.Substring(0, this.txtInput.Text.Length - 1);
+                    this.txtInput.SelectionStart = this.txtInput.Text.Length;
+                    this.txtInput.SelectionLength = 0;
+                }
             }
             else
             {
@@ -50,7 +66,7 @@ namespace HappyCoding.Calculator.Win
                 if (this.calculator.IsValidExpression(expression))
                 {
                     var result = this.calculator.Calculate(expression);
-                    this.textBox2.Text = result.ToString();
+                    this.txtResult.Text = result.ToString();
                 }
             }
         }
@@ -67,8 +83,8 @@ namespace HappyCoding.Calculator.Win
             Button button = (Button)sender;
             if (button.Text.Length > 1)
             {
-                this.txtInput.Text = this.txtInput.Text.Substring(0, this.txtInput.Text.Length - 1);
-                this.txtInput.SelectionStart = this.txtInput.Text.Length;
+                this.txtInput.Text = string.Empty;
+                this.txtResult.Text = string.Empty;
                 this.txtInput.SelectionLength = 0;
             }
             else
