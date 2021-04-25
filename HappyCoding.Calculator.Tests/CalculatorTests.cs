@@ -63,6 +63,14 @@ namespace HappyCoding.Calculator.Tests
         }
 
         [TestMethod]
+        public void MultipleNegativeTest()
+        {
+            AdvancedCalculator advancedCalculator = new();
+            var result = advancedCalculator.Calculate("2*4*-5");
+            Assert.AreEqual(-40d, result);
+        }
+
+        [TestMethod]
         public void DivideTest()
         {
             AdvancedCalculator advancedCalculator = new();
@@ -85,6 +93,15 @@ namespace HappyCoding.Calculator.Tests
             var result = advancedCalculator.Calculate("9+3*2");
             Assert.AreEqual(15d, result);
         }
+
+        [TestMethod]
+        public void AddAndMultipleAndAddTest()
+        {
+            AdvancedCalculator advancedCalculator = new();
+            var result = advancedCalculator.Calculate("9+3*2+4");
+            Assert.AreEqual(19d, result);
+        }
+
 
         [ExpectedException(typeof(DivideByZeroException))]
         [TestMethod]
@@ -128,6 +145,21 @@ namespace HappyCoding.Calculator.Tests
             Assert.AreEqual(5d, result);
         }
 
+        [TestMethod]
+        public void ValidationTest()
+        {
+            AdvancedCalculator advancedCalculator = new();
+            var result = advancedCalculator.Calculate("(1+2)/3*5+");
+            Assert.AreEqual(double.NaN, result);
+        }
+
+        [TestMethod]
+        public void ValidationMethodTest()
+        {
+            AdvancedCalculator advancedCalculator = new();
+            var result = advancedCalculator.IsValidExpression("(1+2)/3*5+(");
+            Assert.AreEqual(false, result);
+        }
 
     }
 }

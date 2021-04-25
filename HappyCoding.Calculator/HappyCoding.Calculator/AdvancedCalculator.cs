@@ -24,12 +24,35 @@ namespace HappyCoding.Calculator
         }
 
         /// <summary>
+        /// Determines whether the expression can be calculated.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>
+        ///   <c>true</c> if expression is valid <c>true</c>; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsValidExpression(string expression)
+        {
+            var patternValidation = @"^([0-9+\-\/*(),]+[0-9)]{1})$";
+
+            if (!(expression.Count(x => x == '(') == expression.Count(x => x == ')')) || !Regex.IsMatch(expression, patternValidation))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Calculates the specified expression.
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>Result.</returns>
         public double Calculate(string expression)
         {
+            if (!IsValidExpression(expression))
+            {
+                return double.NaN;
+            }
             var result = CalculateParenthesis(expression);
 
             result = CalculateBasicOperations(result);
@@ -54,17 +77,17 @@ namespace HappyCoding.Calculator
         private string CalculateBasicOperations(string expression)
         {
             //string result = expression;
-            if (expression.Contains("/") && expression.Contains("*")  && expression.IndexOf("*") < expression.IndexOf("/"))
+            if (expression.Contains("/") && expression.Contains("*") && expression.IndexOf("*") < expression.IndexOf("/"))
             {
                 expression = CalculateBasicOperation(expression, "*");
                 //result = CalculateBasicOperation(expression, "/");
             }
-            else if (expression.Contains("/")  && expression.Contains("*") && expression.IndexOf("/") < expression.IndexOf("*"))
+            else if (expression.Contains("/") && expression.Contains("*") && expression.IndexOf("/") < expression.IndexOf("*"))
             {
                 expression = CalculateBasicOperation(expression, "/");
                 //result = CalculateBasicOperation(expression, "*");
             }
-            else if(expression.Contains("/"))
+            else if (expression.Contains("/"))
             {
                 expression = CalculateBasicOperation(expression, "/");
             }
@@ -73,25 +96,21 @@ namespace HappyCoding.Calculator
                 expression = CalculateBasicOperation(expression, "*");
             }
 
-            if (expression.Contains("-") && expression.Contains("+")  && expression.IndexOf("+") < expression.IndexOf("-"))
+            if (expression.Contains("-") && expression.Contains("+") && expression.IndexOf("+") < expression.IndexOf("-"))
             {
                 expression = CalculateBasicOperation(expression, "+");
-                //result = CalculateBasicOperation(expression, "-");
             }
             else if (expression.Contains("-") && expression.Contains("+") && expression.IndexOf("-") < expression.IndexOf("+"))
             {
                 expression = CalculateBasicOperation(expression, "-");
-                //result = CalculateBasicOperation(expression, "+");
             }
             else if (expression.Contains("-"))
             {
                 expression = CalculateBasicOperation(expression, "-");
-                //result = CalculateBasicOperation(expression, "+");
             }
             else if (expression.Contains("+"))
             {
                 expression = CalculateBasicOperation(expression, "+");
-                //result = CalculateBasicOperation(expression, "-");
             }
             return expression;
 
@@ -99,7 +118,7 @@ namespace HappyCoding.Calculator
 
         private string CalculateBasicOperation(string expression, string expressionOperator)
         {
-            var pattern = $"([0-9,]*[{expressionOperator}][0-9,]+)";
+            var pattern = $"([0-9,]+[{expressionOperator}][0-9,-]+)";
             var regex = new Regex(pattern);
             var enumerator = regex.Matches(expression).GetEnumerator();
             double currentValue = double.NaN;
@@ -173,12 +192,16 @@ namespace HappyCoding.Calculator
             return expression;
         }
 
-        public string CalculateParenthesis(string expression)
+        /// <summary>
+        /// Calculates the parenthesis.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        private string CalculateParenthesis(string expression)
         {
             var pattern = $"[(][0-9+-/*]*[)]";
             var regex = new Regex(pattern);
             var enumerator = regex.Matches(expression).GetEnumerator();
-            double currentValue = double.NaN;
             while (enumerator.MoveNext())
             {
                 var currentExpression = enumerator.Current.ToString();
