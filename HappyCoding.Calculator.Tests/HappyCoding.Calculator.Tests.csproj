@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HappyCoding.Calculator\HappyCoding.Calculator\HappyCoding.Calculator.csproj" />
+    <ProjectReference Include="..\HappyCoding.Calculator\HappyCoding.Calculator.csproj" />
   </ItemGroup>
 
 </Project>
